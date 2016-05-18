@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 
-	public int health;
+	public float health;
 
 	public int maxhealth;
 
@@ -19,6 +19,8 @@ public class Player : MonoBehaviour {
 	public Image staminabar;
 
 	public Image log1,log2,log3;
+
+
 
 	void logui(){
 		if (logtotal == 1)
@@ -40,7 +42,9 @@ public class Player : MonoBehaviour {
 		stamina = 100;
 		maxstamina = 100;
 
+
 		//setting the pickup images in the ui for the logs to false
+		logtotal=0;
 		log1.enabled = false;
 		log2.enabled = false;
 		log3.enabled = false;
@@ -48,23 +52,32 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if (Input.GetMouseButtonDown (0)) {
+			if (stamina > 10) {
+				stamina -= 10;
+				staminabar.fillAmount = stamina * .01f;
+
+			}
+
+
+		}
+			
 
 	}
 
 	void OnTriggerEnter(Collider other){
 		
 		if (other.gameObject.CompareTag ("health")) {
-			health -= 10;
-			if (health < 0)
-				health = 0;
+			health += 20;
+			if (health > 100)
+				health = 100;
 			healthbar.fillAmount = health * .01f;
 			Destroy(other.gameObject);
 		}
 		if (other.gameObject.CompareTag ("stamina")) {
-			stamina -= 10;
-			if (stamina < 0)
-				stamina = 0;
+			stamina += 10;
+			if (stamina > 100)
+				stamina = 100;
 			staminabar.fillAmount = stamina * .01f;
 			Destroy(other.gameObject);
 		}
@@ -74,5 +87,16 @@ public class Player : MonoBehaviour {
 			logui();
 			Destroy(other.gameObject);
 		}
+	}
+
+	void OnTriggerStay(Collider other){
+		if (other.gameObject.CompareTag ("enemy")) {
+			health -= .25f;
+			if (health < 0)
+				health = 0;
+			healthbar.fillAmount = health * .01f;
+			//Destroy(other.gameObject);
+		}
+	
 	}
 }
